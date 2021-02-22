@@ -1,0 +1,12 @@
+{
+  "name": "Bakesale",
+  "displayName": "Bakesale",
+  "expo": {
+    "name": "Bakesale",
+    "slug": "Bakesale",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
