@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Animated, Easing, Dimensions } from 'react-native';
 
 import ajax from '../ajax';
 import DealDetail from './DealDetail';
@@ -7,13 +7,30 @@ import DealList from './DealList';
 import SearchBar from './SearchBar';
 
 class App extends React.Component {
+  titleXPos = new Animated.Value(0);
   state = {
     deals: [],
     dealsFromSearch: [],
     currentDealId: null,
   };
 
+  animateTitle = (direction = 1) => {
+    const width = Dimensions.get('window').width - 150;
+    Animated.spring(
+      this.titleXPos,
+      { toValue: direction * (width / 2), 
+        duration: 1000,
+        easing: Easing.ease, 
+        useNativeDriver: false }
+    ).start(({ finished }) => {
+      if (finished) {
+        this.animateTitle(-1 * direction); 
+      }
+    });
+  }
+
   async componentDidMount() {
+    this.animateTitle();
     const deals = await  ajax.fetchInitialDeals();
     this.setState({ deals });
   }
@@ -64,9 +81,9 @@ class App extends React.Component {
       );
     }
     return (
-          <View style={styles.container}>
+          <Animated.View style={[{ left: this.titleXPos }, styles.container]}>
               <Text style={styles.header}>Bakesale</Text>
-          </View>
+          </Animated.View>
     );
   }
 }
